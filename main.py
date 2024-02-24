@@ -27,11 +27,17 @@ def calculate_profit():
 
         net_profit_after_taxes = net_profit - taxes - church_tax - solidarity_surcharge
 
-        result_label.config(text=f"Ihr Gewinn nach Steuern: {net_profit_after_taxes:.2f} €", fg="#333")
-        taxes_label.config(text=f"Steuern: {taxes:.2f} €", fg="#333")
-        prop_firm_label.config(text=f"Prop Firm Einbehalt: {prop_firm_cut:.2f} $", fg="#333")
-        church_tax_label.config(text=f"Kirchensteuer: {church_tax:.2f} €", fg="#333")
-        solidarity_surcharge_label.config(text=f"Solidaritätszuschlag: {solidarity_surcharge:.2f} €", fg="#333")
+        prop_firm_label.config(text=f"Prop Firm Einbehalt: {prop_firm_cut:.2f} $")
+        if church_tax_var.get():
+            church_tax_label.config(text=f"Kirchensteuer: {church_tax:.2f} €")
+        else:
+            church_tax_label.config(text="")
+        if solidarity_surcharge_var.get():
+            solidarity_surcharge_label.config(text=f"Solidaritätszuschlag: {solidarity_surcharge:.2f} €")
+        else:
+            solidarity_surcharge_label.config(text="")
+        taxes_label.config(text=f"Steuern: {taxes:.2f} €")
+        result_label.config(text=f"Ihr Gewinn: {net_profit_after_taxes:.2f} €")
     except ValueError:
         messagebox.showerror("Fehler", "Bitte geben Sie eine gültige Zahl ein.")
 
@@ -48,7 +54,7 @@ def update_euro_rate():
 # GUI
 root = tk.Tk()
 root.title("Gewinnrechner")
-root.geometry("500x450")
+root.geometry("500x480")
 root.resizable(False, False)  # Fenster nicht resizierbar
 
 # Setze das Tkinter-Theme
@@ -57,16 +63,19 @@ style.theme_use("clam")
 
 # Ändere die Farben und Schriftarten
 root.configure(bg="#f9f9f9")
-input_frame = tk.Frame(root, bg="#f9f9f9")
-options_frame = tk.Frame(root, bg="#f9f9f9")
 result_frame = tk.Frame(root, bg="#f9f9f9")
+options_frame = tk.Frame(root, bg="#f9f9f9")
+input_frame = tk.Frame(root, bg="#f9f9f9")
 
 # Frames
-input_frame.pack(pady=20)
-options_frame.pack(pady=10)
-result_frame.pack(pady=10)
+input_frame.pack(side="top", pady=20)
+options_frame.pack(side="top", pady=10)
+result_frame.pack(side="top", pady=10)
 
 # Labels
+made_by_label = tk.Label(root, text="Made by qeinz", bg="#f9f9f9", fg="#888", font=("Arial", 10))
+made_by_label.pack(side="top", pady=5)
+
 profit_label = tk.Label(input_frame, text="Profit auf Ihrem Konto ($)", bg="#f9f9f9", fg="#333", font=("Arial", 12, "bold"))
 profit_label.grid(row=0, column=0, padx=10, pady=5, sticky="w")
 
@@ -85,20 +94,20 @@ solidarity_surcharge_checkbox = tk.Checkbutton(options_frame, text="Solidarität
                                                variable=solidarity_surcharge_var, bg="#f9f9f9", font=("Arial", 12))
 solidarity_surcharge_checkbox.grid(row=1, column=0, padx=10, pady=5, sticky="w")
 
-result_label = tk.Label(result_frame, text="", bg="#f9f9f9", fg="#333", font=("Arial", 12))
-result_label.pack(pady=5)
+prop_firm_label = tk.Label(result_frame, text="", bg="#f9f9f9", font=("Arial", 12))
+prop_firm_label.pack(pady=(0, 5))
 
-taxes_label = tk.Label(result_frame, text="", bg="#f9f9f9", fg="#333", font=("Arial", 12))
-taxes_label.pack()
-
-prop_firm_label = tk.Label(result_frame, text="", bg="#f9f9f9", fg="#333", font=("Arial", 12))
-prop_firm_label.pack()
-
-church_tax_label = tk.Label(result_frame, text="", bg="#f9f9f9", fg="#333", font=("Arial", 12))
+church_tax_label = tk.Label(result_frame, text="", bg="#f9f9f9", font=("Arial", 12))
 church_tax_label.pack()
 
-solidarity_surcharge_label = tk.Label(result_frame, text="", bg="#f9f9f9", fg="#333", font=("Arial", 12))
+solidarity_surcharge_label = tk.Label(result_frame, text="", bg="#f9f9f9", font=("Arial", 12))
 solidarity_surcharge_label.pack()
+
+taxes_label = tk.Label(result_frame, text="", bg="#f9f9f9", font=("Arial", 12))
+taxes_label.pack()
+
+result_label = tk.Label(result_frame, text="", bg="#f9f9f9", font=("Arial", 12))
+result_label.pack(pady=5)
 
 # Start GUI
 euro_rate = 1.0  # Default Euro rate
